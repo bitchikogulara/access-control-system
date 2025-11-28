@@ -1,7 +1,7 @@
 # Access Control System
 
-ESP32-based RFID access control system with a Node.js/Express backend and MongoDB storage.  
-Supports card validation, logging, and real-time authorization over HTTP.
+An ESP32-based RFID access control system featuring real-time validation through a Node.js/Express backend with MongoDB storage.  
+Includes a configuration portal, 3D-printed enclosure, device display feedback, and complete wireless provisioning.
 
 <p align="center">
   <img src="./docs/images/device-front.jpg" width="450" alt="Access Control System Device">
@@ -11,45 +11,64 @@ Supports card validation, logging, and real-time authorization over HTTP.
 
 ## Overview
 
-This project is a complete access control system built around an ESP32 microcontroller and an MFRC522 RFID reader.  
-The ESP32 reads RFID cards, sends authorization requests to a backend server over HTTP, and unlocks or denies access based on the server’s response.
+This project implements a complete access control system using:
 
-The system includes:
+- ESP32 microcontroller  
+- MFRC522 RFID reader  
+- Node.js/Express backend  
+- MongoDB database  
+- Custom 3D-printed enclosure  
+- Wi-Fi configuration portal with onboard AP mode  
 
-- **Embedded firmware** running on an ESP32  
-- **Backend server** built with Node.js/Express and MongoDB  
-- **3D-printed enclosure** for the final physical product  
+The device reads RFID cards, sends their UID to the backend server, and reacts with **ALLOW** or **DENY** feedback based on server response.
 
 ---
 
 ## Features
 
-- ESP32-based controller with MFRC522 RFID reader  
-- HTTP communication between device and backend  
-- Node.js/Express backend for card validation and event logging  
-- MongoDB database for storing authorized cards and logs  
-- Real-time authorization response (ALLOW / DENY)  
-- Custom-designed 3D-printed enclosure  
+- ESP32 firmware written for stable, real-time operation  
+- MFRC522 RFID card reading  
+- HTTP communication with backend  
+- Node.js/Express REST API for validation and logging  
+- MongoDB database for storing authorized cards and access logs  
+- Device display + buzzer for user feedback  
+- Full Wi-Fi provisioning system with captive-style config page  
+- Lightweight 3D-printed enclosure designed for daily use  
 
 ---
 
 ## System Architecture
 
 ```text
-[ RFID Card ] --> [ ESP32 + RFID Reader ] --> HTTP Request --> [ Node.js/Express Backend ] --> [ MongoDB ]
+[ RFID Card ] --> [ ESP32 + MFRC522 ] --> HTTP Request --> [ Node.js/Express Backend ] --> [ MongoDB ]
                                           <-- HTTP Response (ALLOW / DENY) <--
 ```
+
+- Device reads RFID UID  
+- Sends UID to backend  
+- Backend checks database  
+- Backend sends ALLOW / DENY  
+- Device displays result + optional buzzer  
 
 ---
 
 ## Hardware
 
-Main components:
+Components used:
 
-- ESP32 development board  
-- MFRC522 RFID reader module  
-- Small display + buzzer for status feedback  
-- 3D-printed enclosure (see `./enclosure/`)  
+- ESP32 Dev Board  
+- MFRC522 RFID reader  
+- Small I2C display  
+- Buzzer  
+- Custom 3D-printed enclosure  
+- Reset button accessible through a pinhole in the enclosure  
+
+The enclosure and all additional hardware photos will be placed inside:
+
+```
+./docs/images/
+./enclosure/
+```
 
 ---
 
@@ -57,17 +76,19 @@ Main components:
 
 Located in:
 
-```text
+```
 ./RFID/
 ```
 
-Main responsibilities:
+Responsible for:
 
-- Initialize RFID reader and capture card UIDs  
-- Connect to Wi-Fi  
-- Send UID to backend via HTTP  
-- Parse backend response (ALLOW / DENY)  
-- Activate output devices (display, buzzer, etc.)  
+- Initializing MFRC522 reader  
+- Reading card UIDs  
+- Connecting to Wi-Fi  
+- Communicating with the backend via HTTP  
+- Handling configuration mode  
+- Non-volatile saving of Wi-Fi and server settings  
+- Output control for display + buzzer  
 
 ---
 
@@ -75,18 +96,20 @@ Main responsibilities:
 
 Located in:
 
-```text
+```
 ./Server for RFID/
 ```
 
-Responsibilities:
+Backend capabilities:
 
-- Provide REST API endpoints  
-- Validate RFID UIDs against MongoDB  
-- Log access attempts with timestamps  
-- Respond to firmware with JSON (ALLOW / DENY)  
+- Validates RFID card IDs  
+- Provides `/validate` endpoint for device checking  
+- Stores authorized cards  
+- Logs all access attempts  
+- Provides routes for viewing logs or card lists  
+- JSON responses for device consumption  
 
-Run instructions:
+### Running the backend
 
 ```bash
 cd "Server for RFID"
@@ -94,26 +117,33 @@ npm install
 npm start
 ```
 
-Requires:  
-- A running MongoDB instance  
-- A `.env` file containing your MongoDB connection string  
+**Requirements:**
+
+- Running MongoDB instance  
+- `.env` file containing:  
+  ```
+  MONGODB_URI=your_connection_string_here
+  SERVER_PORT=your_port
+  ```
 
 ---
 
 ## Enclosure (3D Design)
 
-3D model files are located in:
+3D files stored in:
 
-```text
+```
 ./enclosure/
 ```
 
 Includes:
 
-- `.stl` and/or `.step` files  
-- Photos of printed and assembled enclosure (`./docs/images/enclosure-*.jpg`)  
+- `.stl` files  
+- `.step` files  
+- Build photos  
+- Assembly instructions (optional)  
 
-Example gallery section:
+Example gallery (replace paths with your real images):
 
 ```md
 ### Enclosure Photos
@@ -126,24 +156,120 @@ Example gallery section:
 
 ---
 
-## Project Status
+# Usage Instructions
 
-This project is **functionally complete** and the code is stable.  
-Documentation updates and small refinements are planned.
+## 1. Power On
 
----
+When powered, the ESP32:
 
-## What I Learned
-
-- Designing an end-to-end system connecting **embedded hardware** to a **web backend**  
-- Working with ESP32, MFRC522, and HTTP-based communication  
-- Building REST APIs with Node.js/Express and integrating with MongoDB  
-- Implementing real-time decision logic for access control  
-- Designing and printing a custom enclosure for physical integration  
+1. Loads saved Wi-Fi + server settings  
+2. Attempts to connect  
+3. Enters **normal operation** if successful  
+4. Enters **Configuration Mode** if no valid settings exist  
 
 ---
 
-## License
+# Normal Operation
+
+1. Present an RFID card  
+2. Device reads UID  
+3. Sends request to backend  
+4. Receives **ALLOW / DENY**  
+5. Shows result on display + optional buzzer  
+6. Backend logs the attempt  
+
+> You may include a video demo here:  
+> `./docs/videos/normal_attempt.mp4`
+
+---
+
+# Configuration Mode
+
+Configuration mode enables network setup and server configuration.
+
+You can enter config mode in **two ways**:
+
+---
+
+## A) Reset Button (5-Second Hold)
+
+Your enclosure has a pinhole for reset access.
+
+Procedure:
+
+1. Insert a SIM-tool-style pin  
+2. Hold the reset button for **5 seconds**  
+3. Device reboots into configuration mode  
+4. ESP32 creates a Wi-Fi AP:
+
+```
+SSID: DoorAccess
+Password: 12341234
+```
+
+5. Connect to the AP  
+6. Open browser → visit:
+
+```
+http://192.168.4.1
+```
+
+You will see the configuration interface where you can:
+
+- Set Wi-Fi SSID  
+- Set Wi-Fi password  
+- Set backend server endpoint  
+
+Settings are saved in non-volatile memory and used on next boot.
+
+---
+
+## B) Serial Command (USB)
+
+You may also enter config mode via serial:
+
+1. Connect via USB  
+2. Open Serial Monitor @ 115200 baud  
+3. Send command:
+
+```
+cfg
+```
+
+4. Device restarts into config mode  
+5. Connect to `DoorAccess` and visit `192.168.4.1`
+
+---
+
+# Saving & Applying Settings
+
+- All data is stored in **non-volatile memory**  
+- Device auto-restarts after saving  
+- On next boot, ESP32 connects and resumes normal mode  
+- If connection fails repeatedly → fallback to config mode  
+
+---
+
+# Reset to Factory Defaults
+
+Hold the reset button for **10+ seconds** to clear all saved configuration and restart in config mode.
+
+(If your firmware uses a different duration, update this line.)
+
+---
+
+# What I Learned
+
+- Designing a full end-to-end embedded + backend system  
+- Working with ESP32, RFID modules, and HTTP communication  
+- Building REST APIs using Node.js/Express  
+- Managing data storage and access logs in MongoDB  
+- Designing and iterating on a functional 3D-printed enclosure  
+- Implementing non-volatile configuration systems (AP mode + captive portal)  
+
+---
+
+# License
 
 Released under the **MIT License**.  
 See the `LICENSE` file for full details.
