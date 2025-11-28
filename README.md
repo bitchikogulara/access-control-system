@@ -4,7 +4,6 @@ ESP32-based RFID access control system with a Node.js/Express backend and MongoD
 Supports card validation, logging, and real-time authorization over HTTP.
 
 <p align="center">
-  <!-- Update the path once you upload your photo -->
   <img src="./docs/images/device-front.jpg" width="450" alt="Access Control System Device">
 </p>
 
@@ -12,25 +11,25 @@ Supports card validation, logging, and real-time authorization over HTTP.
 
 ## Overview
 
-This project is a complete access control system built around an ESP32 microcontroller and an RFID reader.  
-The ESP32 reads RFID cards, sends authorization requests to a backend server over HTTP, and then unlocks or denies access based on the server response.
+This project is a complete access control system built around an ESP32 microcontroller and an MFRC522 RFID reader.  
+The ESP32 reads RFID cards, sends authorization requests to a backend server over HTTP, and unlocks or denies access based on the server’s response.
 
 The system includes:
 
-- **Embedded firmware** running on an ESP32
-- **Backend server** built with Node.js/Express and MongoDB
-- **3D-printed enclosure** for the final physical product
+- **Embedded firmware** running on an ESP32  
+- **Backend server** built with Node.js/Express and MongoDB  
+- **3D-printed enclosure** for the final physical product  
 
 ---
 
 ## Features
 
-- ESP32-based controller with RFID reader
-- HTTP communication between device and backend
-- Node.js/Express server that validates cards and logs access attempts
-- MongoDB database for storing authorized cards and event logs
-- Real-time authorization (allow/deny) responses to the device
-- Custom 3D-printed casing for the final hardware
+- ESP32-based controller with MFRC522 RFID reader  
+- HTTP communication between device and backend  
+- Node.js/Express backend for card validation and event logging  
+- MongoDB database for storing authorized cards and logs  
+- Real-time authorization response (ALLOW / DENY)  
+- Custom-designed 3D-printed enclosure  
 
 ---
 
@@ -41,29 +40,22 @@ The system includes:
                                           <-- HTTP Response (ALLOW / DENY) <--
 ```
 
-- The ESP32 reads the RFID UID and sends it to the backend.
-- The backend checks the UID against the database and decides whether to allow or deny access.
-- The decision is sent back to the ESP32, which can, for example, toggle a relay / LED / buzzer (depending on how you wired it).
-
 ---
 
 ## Hardware
 
 Main components:
 
-- ESP32 development board
-- RFID reader module (e.g. MFRC522 or similar)
-- Status indicators (LEDs / buzzer, etc.)
-- Power supply for the ESP32 + reader
-- 3D-printed enclosure (see `./enclosure/`)
-
-> **Note:** Add your exact RFID module and wiring details here later.
+- ESP32 development board  
+- MFRC522 RFID reader module  
+- Small display + buzzer for status feedback  
+- 3D-printed enclosure (see `./enclosure/`)  
 
 ---
 
 ## Firmware (ESP32)
 
-The firmware is located in:
+Located in:
 
 ```text
 ./RFID/
@@ -71,57 +63,57 @@ The firmware is located in:
 
 Main responsibilities:
 
-- Initialize RFID reader and read card UIDs
-- Connect to Wi-Fi
-- Send HTTP requests with card data to the backend
-- Parse backend response (ALLOW / DENY)
-- Drive output pins (LED/relay/buzzer) accordingly
-
-> Later you can add a short section with build/flash instructions (PlatformIO, Arduino IDE, etc.).
+- Initialize RFID reader and capture card UIDs  
+- Connect to Wi-Fi  
+- Send UID to backend via HTTP  
+- Parse backend response (ALLOW / DENY)  
+- Activate output devices (display, buzzer, etc.)  
 
 ---
 
 ## Backend (Node.js/Express + MongoDB)
 
-The backend code is located in:
+Located in:
 
 ```text
-./Server fo RFID/
+./Server for RFID/
 ```
 
 Responsibilities:
 
-- Expose HTTP endpoints for the ESP32 to call
-- Validate RFID card IDs against MongoDB
-- Log access attempts (timestamp, card ID, result)
-- Return JSON responses to the ESP32
+- Provide REST API endpoints  
+- Validate RFID UIDs against MongoDB  
+- Log access attempts with timestamps  
+- Respond to firmware with JSON (ALLOW / DENY)  
 
-Basic run instructions (adjust to your actual project):
+Run instructions:
 
 ```bash
-cd "Server fo RFID"
+cd "Server for RFID"
 npm install
 npm start
 ```
 
-You will need a running MongoDB instance and a `.env` file with your connection string.
+Requires:  
+- A running MongoDB instance  
+- A `.env` file containing your MongoDB connection string  
 
 ---
 
 ## Enclosure (3D Design)
 
-The 3D model files for the device casing will be placed in:
+3D model files are located in:
 
 ```text
 ./enclosure/
 ```
 
-Here you can include:
+Includes:
 
-- `.stl` / `.step` files
-- Photos of the printed and assembled enclosure (`./docs/images/enclosure-*.jpg`)
+- `.stl` and/or `.step` files  
+- Photos of printed and assembled enclosure (`./docs/images/enclosure-*.jpg`)  
 
-Example gallery:
+Example gallery section:
 
 ```md
 ### Enclosure Photos
@@ -136,23 +128,18 @@ Example gallery:
 
 ## Project Status
 
-This project is **functionally complete** but still being documented.
-
-Planned improvements:
-
-- Better documentation for wiring, APIs and setup
-- Security improvements (e.g. authentication, HTTPS)
-- Additional configuration options for access logic
+This project is **functionally complete** and the code is stable.  
+Documentation updates and small refinements are planned.
 
 ---
 
 ## What I Learned
 
-- Designing a small end-to-end system that connects **embedded hardware** to a **web backend**.
-- Working with ESP32, RFID readers and HTTP-based communication.
-- Building a Node.js/Express backend and integrating it with MongoDB.
-- Handling real-time authorization logic and logging access events.
-- Thinking about physical product design through a custom **3D-printed enclosure**.
+- Designing an end-to-end system connecting **embedded hardware** to a **web backend**  
+- Working with ESP32, MFRC522, and HTTP-based communication  
+- Building REST APIs with Node.js/Express and integrating with MongoDB  
+- Implementing real-time decision logic for access control  
+- Designing and printing a custom enclosure for physical integration  
 
 ---
 
@@ -160,4 +147,3 @@ Planned improvements:
 
 Released under the **MIT License**.  
 See the `LICENSE` file for full details.
-
