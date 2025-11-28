@@ -17,20 +17,20 @@ The ESP32 reads RFID cards, sends authorization requests to a backend server ove
 
 The system includes:
 
-- **Embedded firmware** running on an ESP32  
-- **Backend server** built with Node.js/Express and MongoDB  
-- **3D-printed enclosure** for the final physical product  
+- **Embedded firmware** running on an ESP32
+- **Backend server** built with Node.js/Express and MongoDB
+- **3D-printed enclosure** for the final physical product
 
 ---
 
 ## Features
 
-- ESP32-based controller with RFID reader  
-- HTTP communication between device and backend  
-- Node.js/Express server that validates cards and logs access attempts  
-- MongoDB database for storing authorized cards and event logs  
-- Real-time authorization (allow/deny) responses to the device  
-- Custom 3D-printed casing for the final hardware  
+- ESP32-based controller with RFID reader
+- HTTP communication between device and backend
+- Node.js/Express server that validates cards and logs access attempts
+- MongoDB database for storing authorized cards and event logs
+- Real-time authorization (allow/deny) responses to the device
+- Custom 3D-printed casing for the final hardware
 
 ---
 
@@ -41,9 +41,9 @@ The system includes:
                                           <-- HTTP Response (ALLOW / DENY) <--
 ```
 
-- The ESP32 reads the RFID UID and sends it to the backend.  
-- The backend checks the UID against the database and decides whether to allow or deny access.  
-- The device reacts accordingly (LED/relay/buzzer/etc.).  
+- The ESP32 reads the RFID UID and sends it to the backend.
+- The backend checks the UID against the database and decides whether to allow or deny access.
+- The decision is sent back to the ESP32, which can, for example, toggle a relay / LED / buzzer (depending on how you wired it).
 
 ---
 
@@ -51,37 +51,39 @@ The system includes:
 
 Main components:
 
-- ESP32 development board  
-- RFID reader module (MFRC522 or similar)  
-- Status indicators (LEDs / buzzer / relay)  
-- 3D-printed enclosure (see `/enclosure/`)  
-- Power supply for ESP32 + reader  
+- ESP32 development board
+- RFID reader module (e.g. MFRC522 or similar)
+- Status indicators (LEDs / buzzer, etc.)
+- Power supply for the ESP32 + reader
+- 3D-printed enclosure (see `./enclosure/`)
 
-> **Note:** Add exact wiring details when ready.
+> **Note:** Add your exact RFID module and wiring details here later.
 
 ---
 
 ## Firmware (ESP32)
 
-Located in:
+The firmware is located in:
 
 ```text
 ./RFID/
 ```
 
-Responsibilities:
+Main responsibilities:
 
-- Initialize RFID reader and read card UIDs  
-- Connect to Wi-Fi  
-- Send HTTP POST requests to backend  
-- Process ALLOW/DENY responses  
-- Trigger actuator output  
+- Initialize RFID reader and read card UIDs
+- Connect to Wi-Fi
+- Send HTTP requests with card data to the backend
+- Parse backend response (ALLOW / DENY)
+- Drive output pins (LED/relay/buzzer) accordingly
+
+> Later you can add a short section with build/flash instructions (PlatformIO, Arduino IDE, etc.).
 
 ---
 
 ## Backend (Node.js/Express + MongoDB)
 
-Located in:
+The backend code is located in:
 
 ```text
 ./Server fo RFID/
@@ -89,12 +91,12 @@ Located in:
 
 Responsibilities:
 
-- Provide API endpoints for ESP32  
-- Validate card IDs against MongoDB  
-- Log all access attempts  
-- Respond with ALLOW/DENY  
+- Expose HTTP endpoints for the ESP32 to call
+- Validate RFID card IDs against MongoDB
+- Log access attempts (timestamp, card ID, result)
+- Return JSON responses to the ESP32
 
-Run instructions:
+Basic run instructions (adjust to your actual project):
 
 ```bash
 cd "Server fo RFID"
@@ -102,24 +104,24 @@ npm install
 npm start
 ```
 
-Requires a working MongoDB instance + `.env` file.
+You will need a running MongoDB instance and a `.env` file with your connection string.
 
 ---
 
 ## Enclosure (3D Design)
 
-Files will be placed in:
+The 3D model files for the device casing will be placed in:
 
 ```text
 ./enclosure/
 ```
 
-Include:
+Here you can include:
 
-- `.stl` / `.step` CAD files  
-- Photos of printed enclosure  
+- `.stl` / `.step` files
+- Photos of the printed and assembled enclosure (`./docs/images/enclosure-*.jpg`)
 
-Example gallery section:
+Example gallery:
 
 ```md
 ### Enclosure Photos
@@ -134,28 +136,28 @@ Example gallery section:
 
 ## Project Status
 
-The system is **functionally complete**.  
-Documentation updates are ongoing.
+This project is **functionally complete** but still being documented.
 
 Planned improvements:
 
-- Add wiring schematics  
-- Add full API reference  
-- Improve security (HTTPS, API keys)  
-- Add device configuration endpoints  
+- Better documentation for wiring, APIs and setup
+- Security improvements (e.g. authentication, HTTPS)
+- Additional configuration options for access logic
 
 ---
 
 ## What I Learned
 
-- Designing full end-to-end hardware + backend systems  
-- Working with ESP32, RFID modules, and network communication  
-- Building REST APIs with Node.js/Express and MongoDB  
-- Managing real-time authorization and event logging  
-- Designing enclosures for 3D printing  
+- Designing a small end-to-end system that connects **embedded hardware** to a **web backend**.
+- Working with ESP32, RFID readers and HTTP-based communication.
+- Building a Node.js/Express backend and integrating it with MongoDB.
+- Handling real-time authorization logic and logging access events.
+- Thinking about physical product design through a custom **3D-printed enclosure**.
 
 ---
 
 ## License
 
-Add your preferred license (MIT recommended)
+Released under the **MIT License**.  
+See the `LICENSE` file for full details.
+
