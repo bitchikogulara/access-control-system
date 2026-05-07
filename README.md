@@ -3,9 +3,8 @@
 An ESP32-based RFID access control system featuring real-time validation through a Node.js/Express backend with MongoDB storage.  
 Includes a configuration portal, 3D-printed enclosure, device display feedback, and complete wireless provisioning.
 
-<p align="center">
-  <img src="./docs/images/device-front.jpg" width="450" alt="Access Control System Device">
-</p>
+<img height="500" alt="WhatsApp Image 2025-12-26 at 13 22 30" src="https://github.com/user-attachments/assets/1f51acbe-24b8-4132-b9b6-19feb98147ea" />
+<img height="500" alt="WhatsApp Image 2025-12-26 at 13 21 58" src="https://github.com/user-attachments/assets/f3cd4ae2-81f4-4a41-a0bf-1d2a09d03ca3" />
 
 ---
 
@@ -131,29 +130,7 @@ npm start
 
 ## Enclosure (3D Design)
 
-3D files are stored in:
-
-```text
-./enclosure/
-```
-
-Includes:
-
-- `.stl` and/or `.step` CAD files  
-- Photos of the printed and assembled enclosure (`./docs/images/enclosure-*.jpg`)  
-
-Example gallery (replace with real paths):
-
-```md
-### Enclosure Photos
-
-<p align="center">
-  <img src="./docs/images/enclosure-front.jpg" width="320">
-  <img src="./docs/images/enclosure-side.jpg" width="320">
-</p>
-```
-
----
+coming soon!
 
 # Usage Instructions
 
